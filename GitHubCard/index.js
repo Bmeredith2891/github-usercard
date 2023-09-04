@@ -1,8 +1,34 @@
+import axios from "axios";
 /*
   STEP 1: using axios, send a GET request to the following URL
     (replacing the placeholder with your Github name):
     https://api.github.com/users/<your name>
 */
+const followersArray = [
+  "tetondan",
+  "dustinmyers",
+  "justsml",
+  "luishrd",
+  "bigknell",
+  "Bmeredith2891",
+];
+
+followersArray.forEach(follower => {
+  const URL = `https://api.github.com/users/${follower}`;
+
+const grabData = () => {
+  axios.get(URL)
+  .then(res => {
+    const cardsDiv = document.querySelector(".cards");
+    cardsDiv.appendChild(createCard(res.data));
+    console.log(cardsDiv); 
+  })
+  .catch(err => {
+    console.log(err);
+  });
+}
+grabData()
+})
 
 /*
   STEP 2: Inspect and study the data coming back, this is YOUR
@@ -28,7 +54,48 @@
     user, and adding that card to the DOM.
 */
 
-const followersArray = [];
+
+
+function createCard(data) {
+  const cardDiv = document.createElement("div");
+  const userImg = document.createElement("img");
+  const cardInfoDiv = document.createElement("div");
+  const nameHeader = document.createElement("h3");
+  const userNameP = document.createElement("p");
+  const userLocationP = document.createElement("p");
+  const profileP = document.createElement("p");
+  const githubAddressLink = document.createElement("a");
+  const followersP = document.createElement("p");
+  const followingP = document.createElement("p");
+  const bioP = document.createElement("p");
+  
+  cardDiv.classList.add("card");
+  userImg.src = data.avatar_url;
+  cardInfoDiv.classList.add("card-info");
+  nameHeader.classList.add("name");
+  nameHeader.textContent = data.name;
+  userNameP.classList.add("username");
+  userNameP.textContent = data.login;
+  userLocationP.textContent = data.location;
+  profileP.textContent = `Profile: `;
+  githubAddressLink.href = "https://api.github.com/users/Bmeredith2891";
+  followersP.textContent = `Followers: ${followersArray.length}`;
+  followingP.textContent = `Following: ${data.following}`;
+  bioP.textContent = `Bio: ${data.bio}`;
+
+  cardDiv.appendChild(userImg);
+  cardDiv.appendChild(cardInfoDiv);
+  cardInfoDiv.appendChild(nameHeader);
+  cardInfoDiv.appendChild(userNameP);
+  cardInfoDiv.appendChild(userLocationP);
+  cardInfoDiv.appendChild(profileP);
+  cardInfoDiv.appendChild(followersP);
+  cardInfoDiv.appendChild(followingP);
+  cardInfoDiv.appendChild(bioP);
+  profileP.appendChild(githubAddressLink);
+
+  return cardDiv;
+}
 
 /*
   STEP 3: Create a function that accepts a single object as its only argument.
